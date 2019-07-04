@@ -2,8 +2,8 @@
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.3109897886176551 0.9032116028597933 0.29579410378672094 1.6597646826924184
-  position 0.5692775003432123 0.40879815589681495 0.14427856953024454
+  orientation 0.04596346048924068 0.9640185977489527 0.2618310590705326 3.2959077239381456
+  position 0.5397054966861626 2.045658078775356 -4.648876156475334
 }
 TexturedBackground {
 }
@@ -716,7 +716,7 @@ DEF OMNI_WHEELS Robot {
           }
         }
       ]
-      name "dist_sensor1"
+      name "dist_left_sensor1"
       lookupTable [
         0 0 0
         0.02 0 0
@@ -736,7 +736,7 @@ DEF OMNI_WHEELS Robot {
           }
         }
       ]
-      name "distance_sensor2"
+      name "distance_right_sensor2"
       lookupTable [
         0 0 0
         0.02 0 0
@@ -748,4 +748,45 @@ DEF OMNI_WHEELS Robot {
   physics Physics {
   }
   controller "controller1"
+}
+Solid {
+  translation 1.46 0.15 0
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.242023 1 0.9991
+      }
+      geometry Box {
+        size 0.3 0.3 0.3
+      }
+    }
+  ]
+}
+Solid {
+  translation 0.36 0.15 -1.2
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.242023 1 0.9991
+      }
+      geometry Box {
+        size 0.3 0.3 0.3
+      }
+    }
+  ]
+  name "solid(1)"
+}
+Solid {
+  translation -0.16999999999999998 0.15 0.7899999999999999
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.242023 1 0.9991
+      }
+      geometry Box {
+        size 0.3 0.3 0.3
+      }
+    }
+  ]
+  name "solid(2)"
 }
