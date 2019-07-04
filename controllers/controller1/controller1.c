@@ -11,7 +11,68 @@
 #define OBSTACLE_DISTANCE 25.0
 #define PI 3.14159
 
-void ManualMode(){
+void RightRobot (WbDeviceTag *wheels) {
+  wb_motor_set_velocity(wheels[0], 6.36);
+  wb_motor_set_velocity(wheels[1], 0);
+  wb_motor_set_velocity(wheels[2], -6.36);
+}
+
+void LeftRobot (WbDeviceTag *wheels) {
+  wb_motor_set_velocity(wheels[0], 0);
+  wb_motor_set_velocity(wheels[1], -6.36);
+  wb_motor_set_velocity(wheels[2], 6.36);
+}
+
+void DownRobot (WbDeviceTag *wheels) {
+  wb_motor_set_velocity(wheels[0], 6.36);
+  wb_motor_set_velocity(wheels[1], -6.36);
+  wb_motor_set_velocity(wheels[2], 0);
+}
+
+void UpRobot (WbDeviceTag *wheels) {
+  wb_motor_set_velocity(wheels[0], -6.36);
+  wb_motor_set_velocity(wheels[1], 6.36);
+  wb_motor_set_velocity(wheels[2], 0);
+}
+
+void TurnRight (WbDeviceTag *wheels) {
+  wb_motor_set_velocity(wheels[0], 6.36);
+  wb_motor_set_velocity(wheels[1], 6.36);
+  wb_motor_set_velocity(wheels[2], 6.36);
+}
+
+void TurnLeft (WbDeviceTag *wheels) {
+  wb_motor_set_velocity(wheels[0], -6.36);
+  wb_motor_set_velocity(wheels[1], -6.36);
+  wb_motor_set_velocity(wheels[2], -6.36);
+}
+
+void StaticRobot (WbDeviceTag *wheels) {
+  wb_motor_set_velocity(wheels[0], 0);
+  wb_motor_set_velocity(wheels[1], 0);
+  wb_motor_set_velocity(wheels[2], 0);
+}
+
+void ForwardDirectionRobot(WbDeviceTag *wheels) {
+  wb_motor_set_velocity(wheels[0], -6.66);
+  wb_motor_set_velocity(wheels[1], 6.66);
+  wb_motor_set_velocity(wheels[2], 0);
+}
+void TurnLeftAutonomous (WbDeviceTag *wheels) {
+  wb_motor_set_velocity(wheels[0], 0);
+  wb_motor_set_velocity(wheels[1], 6.66);
+  wb_motor_set_velocity(wheels[2], -6.66);
+}
+
+void TurnRightAutonomous (WbDeviceTag *wheels) {
+  wb_motor_set_velocity(wheels[0], 0);
+  wb_motor_set_velocity(wheels[1], -6.66);
+  wb_motor_set_velocity(wheels[2], 6.66);
+}
+
+
+
+void ManualMode() {
   int key_pressed;
   int left = 0;
   int right = 0;
@@ -59,34 +120,24 @@ void ManualMode(){
     PosSensor1 = wb_position_sensor_get_value(encoder[0]);
 
 
+
+
     if (key_pressed == WB_KEYBOARD_DOWN) {
-      wb_motor_set_velocity(wheels[0], 6.36);
-      wb_motor_set_velocity(wheels[1], -6.36);
-      wb_motor_set_velocity(wheels[2], 0);
+      DownRobot(wheels);
     } else if (key_pressed == WB_KEYBOARD_UP) {
-      wb_motor_set_velocity(wheels[0], -6.36);
-      wb_motor_set_velocity(wheels[1], 6.36);
-      wb_motor_set_velocity(wheels[2], 0);
+      UpRobot(wheels);
     }  else if (key_pressed == WB_KEYBOARD_LEFT) {
-      wb_motor_set_velocity(wheels[0], 0);
-      wb_motor_set_velocity(wheels[1], -6.36);
-      wb_motor_set_velocity(wheels[2], 6.36);
+      LeftRobot(wheels);
     } else if (key_pressed == WB_KEYBOARD_RIGHT) {
-      wb_motor_set_velocity(wheels[0], 6.36);
-      wb_motor_set_velocity(wheels[1], 0);
-      wb_motor_set_velocity(wheels[2], -6.36);
+      RightRobot(wheels);
     } else if (key_pressed == 'S' ) {
       ComparingValue = PosSensor1 + 0.785398;
         left = 1;
     } else if (left == 1) {
         if (PosSensor1 <= ComparingValue) {
-          wb_motor_set_velocity(wheels[0], 6.36);
-          wb_motor_set_velocity(wheels[1], 6.36);
-          wb_motor_set_velocity(wheels[2], 6.36);
+          TurnRight(wheels);
         } else {
-          wb_motor_set_velocity(wheels[0], 0);
-          wb_motor_set_velocity(wheels[1], 0);
-          wb_motor_set_velocity(wheels[2], 0);
+          StaticRobot(wheels);
           left = 0;
         }
       } else if (key_pressed == 'A') {
@@ -94,23 +145,17 @@ void ManualMode(){
         right = 1;
       } else if (right == 1) {
         if (PosSensor1 >= ComparingValue) {
-          wb_motor_set_velocity(wheels[0], -6.36);
-          wb_motor_set_velocity(wheels[1], -6.36);
-          wb_motor_set_velocity(wheels[2], -6.36);
+          TurnLeft(wheels);
         } else {
-          wb_motor_set_velocity(wheels[0], 0);
-          wb_motor_set_velocity(wheels[1], 0);
-          wb_motor_set_velocity(wheels[2], 0);
+          StaticRobot(wheels);
           right = 0;
         }
       } else {
-        wb_motor_set_velocity(wheels[0], 0);
-        wb_motor_set_velocity(wheels[1], 0);
-        wb_motor_set_velocity(wheels[2], 0);
+        StaticRobot(wheels);
       }
   }
 
-  void AutonomousMode(){
+  void AutonomousMode() {
     double ComparingValue = 0;
     double distSensor1_value = 0;
     double distSensor2_value = 0;
@@ -149,18 +194,12 @@ void ManualMode(){
 
     printf("Comparing angle value %lf\n", ComparingValue);
 
-    wb_motor_set_velocity(wheels[0], -6.66);
-    wb_motor_set_velocity(wheels[1], 6.66);
-    wb_motor_set_velocity(wheels[2], 0);
+    ForwardDirectionRobot(wheels);
 
     if(distSensor1_value < distSensor2_value && distSensor1_value < 200) {
-      wb_motor_set_velocity(wheels[0], 0);
-      wb_motor_set_velocity(wheels[1], 6.66);
-      wb_motor_set_velocity(wheels[2], -6.66);
+      TurnLeftAutonomous(wheels);
     } else if (distSensor1_value > distSensor2_value && distSensor2_value < 200) {
-      wb_motor_set_velocity(wheels[0], 0);
-      wb_motor_set_velocity(wheels[1], -6.66);
-      wb_motor_set_velocity(wheels[2], 6.66);
+      TurnRightAutonomous(wheels);
     }
   }
 
