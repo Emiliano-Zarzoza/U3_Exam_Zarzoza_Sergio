@@ -11,24 +11,17 @@
 #define OBSTACLE_DISTANCE 25.0
 #define PI 3.14159
 
-int main(int argc, char **argv) {
-
-  wb_robot_init();
-  wb_keyboard_enable(TIME_STEP);
-
+void ManualMode(){
   int key_pressed;
-  double PosSensor1 = 0;
-  double PosSensor2 = 0;
-  double PosSensor3 = 0;
   int left = 0;
   int right = 0;
   double ComparingValue = 0;
   double distSensor1_value = 0;
   double distSensor2_value = 0;
-  int w = 0;
-  int g = 0;
+  double PosSensor1 = 0;
 
-  //distance sensor components
+  key_pressed = wb_keyboard_get_key();
+
   WbDeviceTag dist_sensor[2];
   dist_sensor[0] = wb_robot_get_device("dist_left_sensor1");
   dist_sensor[1] = wb_robot_get_device("dist_right_sensor2");
@@ -56,21 +49,15 @@ int main(int argc, char **argv) {
   wb_position_sensor_enable(encoder[1], TIME_STEP);
   wb_position_sensor_enable(encoder[2], TIME_STEP);
 
-void ManualMode(){
-
-    PosSensor1 = wb_position_sensor_get_value(encoder[0]);
-    PosSensor2 = wb_position_sensor_get_value(encoder[1]);
-    PosSensor3 = wb_position_sensor_get_value(encoder[2]);
-    printf("encoder_1: %lf\n", encoder[0]);
-    printf("encoder_2: %lf\n", encoder[1]);
-    printf("encoder_3: %lf\n", encoder[2]);
-
-    distSensor1_value = wb_distance_sensor_get_value(dist_sensor[1]);
-    distSensor2_value = wb_distance_sensor_get_value(dist_sensor[2]);
+    distSensor1_value = wb_distance_sensor_get_value(dist_sensor[0]);
+    distSensor2_value = wb_distance_sensor_get_value(dist_sensor[1]);
     printf("Distance sensor 1: %lf\n", distSensor1_value);
     printf("Distance sensor 2: %lf\n", distSensor2_value);
 
     printf("Comparing angle value %lf\n", ComparingValue);
+
+    PosSensor1 = wb_position_sensor_get_value(encoder[0]);
+
 
     if (key_pressed == WB_KEYBOARD_DOWN) {
       wb_motor_set_velocity(wheels[0], 6.36);
@@ -124,13 +111,36 @@ void ManualMode(){
   }
 
   void AutonomousMode(){
+    double ComparingValue = 0;
+    double distSensor1_value = 0;
+    double distSensor2_value = 0;
+    WbDeviceTag dist_sensor[2];
+    dist_sensor[0] = wb_robot_get_device("dist_left_sensor1");
+    dist_sensor[1] = wb_robot_get_device("dist_right_sensor2");
 
-    PosSensor1 = wb_position_sensor_get_value(encoder[0]);
-    PosSensor2 = wb_position_sensor_get_value(encoder[1]);
-    PosSensor3 = wb_position_sensor_get_value(encoder[2]);
-    printf("encoder_1: %lf\n", encoder[0]);
-    printf("encoder_2: %lf\n", encoder[1]);
-    printf("encoder_3: %lf\n", encoder[2]);
+    wb_distance_sensor_enable(dist_sensor[0], TIME_STEP);
+    wb_distance_sensor_enable(dist_sensor[1], TIME_STEP);
+
+    //Motor components
+    WbDeviceTag wheels[3];
+    wheels[0] = wb_robot_get_device("right_wheel");
+    wheels[1] = wb_robot_get_device("left_wheel");
+    wheels[2] = wb_robot_get_device("back_wheel");
+
+    wb_motor_set_position(wheels[0], INFINITY);
+    wb_motor_set_position(wheels[1], INFINITY);
+    wb_motor_set_position(wheels[2], INFINITY);
+
+    //encoder components
+    WbDeviceTag encoder[3];
+    encoder[0] = wb_robot_get_device("pos_sensor1");
+    encoder[1] = wb_robot_get_device("pos_sensor2");
+    encoder[2] = wb_robot_get_device("pos_sensor3");
+
+    wb_position_sensor_enable(encoder[0], TIME_STEP);
+    wb_position_sensor_enable(encoder[1], TIME_STEP);
+    wb_position_sensor_enable(encoder[2], TIME_STEP);
+
 
     distSensor1_value = wb_distance_sensor_get_value(dist_sensor[0]);
     distSensor2_value = wb_distance_sensor_get_value(dist_sensor[1]);
@@ -143,20 +153,65 @@ void ManualMode(){
     wb_motor_set_velocity(wheels[1], 6.66);
     wb_motor_set_velocity(wheels[2], 0);
 
-    if(distSensor1_value < distSensor2_value && dist_left_sensor1 < 200) {
-      wb_motor_set_velocity(wheels[0], 6.66);
-      wb_motor_set_velocity(wheels[1], 0);
+    if(distSensor1_value < distSensor2_value && distSensor1_value < 200) {
+      wb_motor_set_velocity(wheels[0], 0);
+      wb_motor_set_velocity(wheels[1], 6.66);
       wb_motor_set_velocity(wheels[2], -6.66);
     } else if (distSensor1_value > distSensor2_value && distSensor2_value < 200) {
-      wb_motor_set_velocity(wheels[0], -6.66);
-      wb_motor_set_velocity(wheels[1], 0);
+      wb_motor_set_velocity(wheels[0], 0);
+      wb_motor_set_velocity(wheels[1], -6.66);
       wb_motor_set_velocity(wheels[2], 6.66);
     }
   }
 
-  wb_motor_set_velocity(wheels[0], 0);
-  wb_motor_set_velocity(wheels[1], 0);
-  wb_motor_set_velocity(wheels[2], 0);
+int main(int argc, char **argv) {
+
+  wb_robot_init();
+  wb_keyboard_enable(TIME_STEP);
+
+  int key_pressed;
+  //double PosSensor1 = 0;
+  //double PosSensor2 = 0;
+  //double PosSensor3 = 0;
+  //int left = 0;
+  //int right = 0;
+  //double ComparingValue = 0;
+  //double distSensor1_value = 0;
+  //double distSensor2_value = 0;
+  int w = 0;
+  int g = 1;
+
+  //distance sensor components
+  WbDeviceTag dist_sensor[2];
+  dist_sensor[0] = wb_robot_get_device("dist_left_sensor1");
+  dist_sensor[1] = wb_robot_get_device("dist_right_sensor2");
+
+  wb_distance_sensor_enable(dist_sensor[0], TIME_STEP);
+  wb_distance_sensor_enable(dist_sensor[1], TIME_STEP);
+
+  //Motor components
+  WbDeviceTag wheels[3];
+  wheels[0] = wb_robot_get_device("right_wheel");
+  wheels[1] = wb_robot_get_device("left_wheel");
+  wheels[2] = wb_robot_get_device("back_wheel");
+
+  wb_motor_set_position(wheels[0], INFINITY);
+  wb_motor_set_position(wheels[1], INFINITY);
+  wb_motor_set_position(wheels[2], INFINITY);
+
+  //encoder components
+  WbDeviceTag encoder[3];
+  encoder[0] = wb_robot_get_device("pos_sensor1");
+  encoder[1] = wb_robot_get_device("pos_sensor2");
+  encoder[2] = wb_robot_get_device("pos_sensor3");
+
+  wb_position_sensor_enable(encoder[0], TIME_STEP);
+  wb_position_sensor_enable(encoder[1], TIME_STEP);
+  wb_position_sensor_enable(encoder[2], TIME_STEP);
+
+  //wb_motor_set_velocity(wheels[0], 0);
+  //wb_motor_set_velocity(wheels[1], 0);
+  //wb_motor_set_velocity(wheels[2], 0);
 
 
   while (wb_robot_step(TIME_STEP) != -1) {
@@ -176,7 +231,6 @@ void ManualMode(){
     ManualMode();
     if(g == 1)
     AutonomousMode();
-
   };
 
   wb_robot_cleanup();

@@ -2,8 +2,8 @@
 WorldInfo {
 }
 Viewpoint {
-  orientation 0.04596346048924068 0.9640185977489527 0.2618310590705326 3.2959077239381456
-  position 0.5397054966861626 2.045658078775356 -4.648876156475334
+  orientation 0.9954837404528633 0.0800747674157822 -0.05099170635784615 5.624933660325687
+  position -0.07761355946156731 2.443184908624262 3.120431765623562
 }
 TexturedBackground {
 }
@@ -27,7 +27,7 @@ DEF OMNI_WHEELS Robot {
               resolution 0.005235983
             }
             RotationalMotor {
-              name "wheel1"
+              name "right_wheel"
               maxVelocity 52.35
               maxTorque 0.59
             }
@@ -296,7 +296,7 @@ DEF OMNI_WHEELS Robot {
               resolution 0.005235983
             }
             RotationalMotor {
-              name "wheel2"
+              name "left_wheel"
               maxVelocity 52.35
               maxTorque 0.59
             }
@@ -498,7 +498,7 @@ DEF OMNI_WHEELS Robot {
               resolution 0.005235983
             }
             RotationalMotor {
-              name "wheel3"
+              name "back_wheel"
               maxVelocity 52.35
               maxTorque 0.59
             }
@@ -736,7 +736,7 @@ DEF OMNI_WHEELS Robot {
           }
         }
       ]
-      name "distance_right_sensor2"
+      name "dist_right_sensor2"
       lookupTable [
         0 0 0
         0.02 0 0
@@ -750,43 +750,53 @@ DEF OMNI_WHEELS Robot {
   controller "controller1"
 }
 Solid {
-  translation 1.46 0.15 0
+  translation 1.46 0.15 -0.74
   children [
     Shape {
       appearance PBRAppearance {
         baseColor 0.242023 1 0.9991
       }
-      geometry Box {
+      geometry DEF G_BOX1 Box {
         size 0.3 0.3 0.3
       }
     }
   ]
+  boundingObject USE G_BOX1
+  physics Physics {
+  }
 }
 Solid {
-  translation 0.36 0.15 -1.2
+  translation 0.76 0.15 1.28
   children [
     Shape {
       appearance PBRAppearance {
         baseColor 0.242023 1 0.9991
       }
-      geometry Box {
+      geometry DEF G_BOX2 Box {
         size 0.3 0.3 0.3
       }
     }
   ]
   name "solid(1)"
+  boundingObject USE G_BOX2
+  physics Physics {
+  }
 }
 Solid {
-  translation -0.16999999999999998 0.15 0.7899999999999999
+  translation 1.146232 0.15 0.524774
+  rotation 0 1 0 1.5707959999999999
   children [
     Shape {
       appearance PBRAppearance {
         baseColor 0.242023 1 0.9991
       }
-      geometry Box {
+      geometry DEF G_BOX3 Box {
         size 0.3 0.3 0.3
       }
     }
   ]
   name "solid(2)"
+  boundingObject USE G_BOX3
+  physics Physics {
+  }
 }
